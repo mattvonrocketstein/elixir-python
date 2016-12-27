@@ -44,6 +44,23 @@ defmodule Potion do
   end
 end
 
+defmodule Python do
+  def get_python(python\\'python', python_path\\to_char_list(Path.expand("lib/"))) do
+      :python.start([
+          {:python_path, python_path},
+          {:python, python}])
+  end
+  def generate_elixir_code(python_module_name) do
+    {:ok, pp} = Python.get_python()
+    :python.call(pp, :potion, :generate_elixir_code, [python_module_name])
+  end
+end
+defmodule Zonk do
+  def testing(a) do
+      {:ok, pp} = Python.get_python()
+      :python.call(pp, :"potion.testing", :testing, [a])
+  end
+end
 defmodule Mix.Tasks.Potion do
   use Mix.Task
 
@@ -53,7 +70,11 @@ defmodule Mix.Tasks.Potion do
   end
 
   def main([]) do
-    IO.puts Potion.a
+    x=Python.generate_elixir_code("potion.testing")
+    IO.puts(x)
+    #mod = Code.compile_string(x)}
+    Code.eval_string(x).python_test_function_with_one_variable('3')
+
   end
 
   def main([fname]) do
